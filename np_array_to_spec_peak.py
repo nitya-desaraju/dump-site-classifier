@@ -129,7 +129,7 @@ def np_array_to_spec_peak(audio_array):
 
     
     S = create_spectrogram()
-    return find_peaks(S, 0)
+    return find_peaks(S)
 
 
 
