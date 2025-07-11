@@ -1,44 +1,32 @@
 import numpy as np
 
-def peaks_to_fingerprints(spec, F):
-
+def peaks_to_fingerprints(pks, F):
+  peaks = sorted(pks, key=lambda x : (x[1], x[0]))
+  dists = []
+  
   '''
-  Runs in O(n^4), optimized version would be O(n^2 logn)
-
-  Input: Spec
-      2D array of shape (N, M)
-          N: # of frequency bins
-          M: # of time bins
-  Input: F
-      the fanout value
-
-  Output: peaks
-      array of tuples [((fi, fj, dt),t), ...]
+  [(41, 3), (2047, 6), (41, 10), (2044, 14), (41, 18), (2043, 22), (41, 25), (2048, 29), (41, 33), (2013, 37), (2046, 
+  37), (41, 40)]
   '''
 
-  grid = np.array(spec)
-  peaks = []
+  t_early = 0
 
-  for t in range(grid.shape[1]):
-    for f in range(grid.shape[0]):
-      if (grid[f,t] == 0):
-        continue
-      neighbors = []
-      col = t
+  for i in range(len(peaks)):
+    proxim = []
+    j = i + 1
+    t_early = i
+    while j < len(peaks) and len(proxim) < F:
+      proxim.append(j)
+      if peaks[j][1] != peaks[t_early][1]:
+        t_early = j
+      j += 1
+    
+    while len(proxim) > F:
+      if abs(proxim[-1][0] - proxim[i][0]) < abs(proxim[t_early][0] - proxim[i][0]):
+        proxim.pop(t_early)
+      else:
+        proxim.pop(-1)
+    
+    dists.extend([((peaks[i][0], peaks[proxim[j]][0], peaks[proxim[j]][1] - peaks[i][1]), peaks[i][1]) for j in range(len(proxim))])
 
-      while len(neighbors) < F and col < grid.shape[1]:
-        arr = []
-        for i in range(grid.shape[0]):
-          if i != f and grid[i, col] == 1:
-            arr.append((col, i))
-        
-        while len(neighbors) + len(arr) > F:
-          if abs(arr[-1][0] - f) < abs(arr[0][0] - f):
-            arr.pop(0)
-          else:
-            arr.pop(-1)
-        neighbors.extend(arr)
-        col += 1
-      peaks.extend([((f, neighbors[i][0], neighbors[i][1] - t), t) for i in range(len(neighbors))])
-
-  return peaks
+  return dists
