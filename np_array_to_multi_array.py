@@ -11,7 +11,7 @@ def random_sample(audio: np.ndarray, time: float, sampling_rate: int = 44100) ->
     end = start + clip_len
     return audio[start:end]
 
-def np_array_to_multi_array(arr: np.ndarray, num: int, minT: float = 2.0, maxT: float = 10.0, sampling_rate: int = 44100) -> list:
+def np_array_to_multi_array(arr: np.ndarray, num: int = 1, minT: float = 2.0, maxT: float = 10.0, sampling_rate: int = 44100) -> list:
     ret = [] #returns a list of np.ndarrays
     for i in range(num):
         max_time = len(arr) / sampling_rate
