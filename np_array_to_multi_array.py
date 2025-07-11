@@ -17,4 +17,6 @@ def np_array_to_multi_array(arr: np.ndarray, num: int, minT: float = 2.0, maxT: 
         max_time = len(arr) / sampling_rate
         clip_time = random.uniform(minT, min(max_time, maxT))  # Avoid time=0; clips will be between 2 and 10 seconds by default
         ret.append(random_sample(arr, clip_time, sampling_rate))
+    if len(ret)==1:
+        return ret[0]
     return ret
