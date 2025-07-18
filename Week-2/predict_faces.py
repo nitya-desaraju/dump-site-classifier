@@ -1,7 +1,7 @@
 import numpy as np
 import pickle
 import os
-from database.py import Profile #importing Profile class
+from database_v1 import Profile #importing Profile class
 
 def predict_faces(distances, descriptors, cutoff):
     """
@@ -17,7 +17,7 @@ def predict_faces(distances, descriptors, cutoff):
     """
 
     #load database
-    db_path = os.path.join(os.path.dirname(__file__), #'database_name.pkl') 
+    db_path = os.path.join(os.path.dirname(__file__), 'face_db.pkl') 
     with open(db_path, 'rb') as file:
         db = pickle.load(file)
         
