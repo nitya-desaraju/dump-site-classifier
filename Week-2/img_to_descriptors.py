@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import numpy as np
 
-def img_to_descriptors(pic, theshold):
+def img_to_descriptors(pic, threshold):
     model = FacenetModel()
     boxes, probabilities, landmarks = model.detect(pic)
 
