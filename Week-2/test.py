@@ -10,4 +10,8 @@ if image.shape[-1] == 4:
 
 descriptors, filtered_boxes = img_to_descriptors(image, 0.5)
 
-predict_face_from_image(descriptors, filtered_boxes, image, 0.5)
+if descriptors == -1:
+    print("No face detected")
+else:
+    predict_face_from_image(descriptors, filtered_boxes, image, 0.5)
+    
