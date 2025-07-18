@@ -22,7 +22,7 @@ def propagate_label(node_idx):
 
     if new_label==nodes[node_idx].label:
         return True
-    nodes[node_idx].label = new_label
+    nodes[node_idx].relabel(new_label)
     return False
 
 def save_current_graph(iteration_num):
