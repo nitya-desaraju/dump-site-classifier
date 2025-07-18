@@ -8,6 +8,8 @@ def img_to_descriptors(pic, threshold):
     model = FacenetModel()
     boxes, probabilities, landmarks = model.detect(pic)
 
+    assert probabilities is not None, "No face detected"
+
     #This function checks if an image is below the probability theshold.
     def filter_false_positive(image, boxes, probs, threshold):
         #Converts boxes and probabilities into arrays if needed
