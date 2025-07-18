@@ -15,9 +15,6 @@ def img_to_descriptors(pic, threshold):
         #Converts boxes and probabilities into arrays if needed
         boxes = np.array(boxes)
         probs = np.array(probs)
-
-        if probs[0] is None:
-            return -1, -1
             
         #Check if probability is above theshold
         keep = probs > threshold
@@ -25,8 +22,6 @@ def img_to_descriptors(pic, threshold):
         return image, filtered_boxes
 
     _, filtered_boxes = filter_false_positive(pic, boxes, probabilities, threshold)
-    if filtered_boxes == -1:
-        return -1, -1
     descriptors = model.compute_descriptors(pic, filtered_boxes)
     
     return descriptors, filtered_boxes
