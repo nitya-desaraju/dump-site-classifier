@@ -7,4 +7,4 @@ def generate_node_list(paths: list[str], C: float) -> (np.ndarray, list):
     dists = cos_dist(descriptors, descriptors)
     adjs = generate_adjacency_matrix(dists, C)
     nodes = create_node_list(paths, adjs)
-    return adjs, nodes
+    return nodes, adjs
