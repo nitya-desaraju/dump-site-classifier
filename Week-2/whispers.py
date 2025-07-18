@@ -32,7 +32,7 @@ def save_current_graph(iteration_num):
     plot.savefig(f"GraphImages/Graph{iteration_num}.png", format="PNG")
     return
 
-def whispers(node_list, adj_matrix, num_iterations=50):
+def whispers(node_list, adj_matrix, num_iterations=500):
     global nodes
     global adj
     nodes = node_list
