@@ -1,3 +1,5 @@
+import numpy as np
+
 def cos_dist(img_descriptors, database_descriptors):
     dot_product = img_descriptors @ database_descriptors.T
     magnitudes_img = np.linalg.norm(img_descriptors, axis = 1)
