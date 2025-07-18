@@ -23,12 +23,12 @@ def predict_faces(distances, descriptors, cutoff):
         
 
     names = list(db.keys())
-    faces = distances.shape[1]
+    faces = distances.shape[0]
     results = []
 
     #find min distance
     for i in range(faces):
-        face_distances = distances[:, i]  
+        face_distances = distances[i]  
         descriptor = descriptors[i]   
 
         min_dist = np.min(face_distances)
