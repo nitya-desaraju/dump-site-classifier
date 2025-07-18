@@ -1,3 +1,6 @@
+from plotting.py import plot_graph
+from create_node_list.py import Node
+
 import networkx as nx
 import random
 from collections import Counter
