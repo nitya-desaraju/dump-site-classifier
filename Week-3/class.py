@@ -19,6 +19,7 @@ class caption:
         self.name = name #caption_ID
         self.image_ID = img_id
         self.caption= string
+        self.W_norm = None
 
 
 def create_class():
