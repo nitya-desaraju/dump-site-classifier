@@ -19,6 +19,10 @@ def calculate_idf(captions):
             doc_freq[word] += 1
 
     idf = {word: math.log(N / (1 + freq)) for word, freq in doc_freq.items()}
+
+    with open('idf.pkl', 'wb') as f:
+        pickle.dump(idf, f)
+
     return idf
 
 
