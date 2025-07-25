@@ -39,8 +39,10 @@ def train_model(train, test, margin, image_ids_updated_pkl, captions_pkl, batch_
     with open(caption_pkl, 'rb') as g:
         caption = pickle.load(g)
     
-    true_descriptors = mg.tensor([list(image_ids[x].descriptor) for x in true_ids])
-    confusor_descriptors = mg.tensor([list(image_ids[x].descriptor) for x in confusor_ids])
+    #true_descriptors = mg.tensor([(image_ids[x].descriptor) for x in true_ids])
+    #confusor_descriptors = mg.tensor([list(image_ids[x].descriptor) for x in confusor_ids])
+    true_descriptors = mg.tensor([x.descriptor for x in true_ids])
+    confusor_descriptors = mg.tensor([x.descriptor for x in confusor_ids])
     caption_embeddings = mg.tensor([list(caption[x].W_norm) for x in caption_ids])
     
     true_descriptors_test = mg.tensor([list(image_ids[x].descriptor) for x in true_test])
