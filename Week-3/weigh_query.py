@@ -9,16 +9,13 @@ import numpy as np
 punc_regex = re.compile('[{}]'.format(re.escape(string.punctuation)))
 
 
-def weigh_query(caption_file_path):
+def weigh_query(captions):
 
     #takes each caption from all captions and processes it
-    def process_caption(caption_file_path):
-        with open(caption_file_path, "rb") as f:
-                caption_objects = pickle.load(f)
-        
+    def process_caption(captions):
         processed_cap = {}
 
-        for caption in caption_objects:
+        for caption in captions:
             processed_cap[caption.name] = punc_regex.sub('', caption.caption.lower())
 
         return processed_cap #["caption1", "caption2", "caption3"]
@@ -89,7 +86,7 @@ def weigh_query(caption_file_path):
         return W_norms
     
     #process the captions
-    processed_captions = process_caption(caption_file_path)
+    processed_captions = process_caption(captions)
 
     #get tokenized words and IDFs
     with open('idf.pkl', 'rb') as f:
