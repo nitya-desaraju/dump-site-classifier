@@ -13,7 +13,7 @@ def calculate_idf(captions):
     N = len(captions)
     doc_freq = defaultdict(int)
 
-    for cap in captions:
+    for cap in captions.values():
         words = set(cap.split())
         for word in words:
             doc_freq[word] += 1
