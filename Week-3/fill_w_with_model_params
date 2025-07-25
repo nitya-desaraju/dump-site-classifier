@@ -1,0 +1,20 @@
+with open('model_parameters_epoch29.pkl', 'rb') as f_cap:
+        p = pickle.load(f_cap)
+
+model.dense.parameters = p[0]
+
+def fill_W(image_ids_updated_pkl, model):
+    
+    with open(image_ids_updated_pkl, 'rb') as f:
+        loaded_data = pickle.load(f)
+
+    for k in loaded_data:
+        k.W = np.array(model(mg.tensor(k.descriptor)))
+
+    print(len(loaded_data))
+    print(loaded_data[0])
+    
+    with open('image_ids_filled.pkl', 'wb') as file:
+        pickle.dump(loaded_data, file)
+
+  fill_W(image_ids_path, model)
