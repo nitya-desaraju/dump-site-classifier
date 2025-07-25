@@ -60,9 +60,10 @@ def embed_caption(caption_file_path):
             words = caption_text.split() 
 
             for word in words:
-                embedding = W_words[word]
-                idf = idfs[word]
-                caption_vec += embedding * idf #calculates vector
+                if word in W_words:
+                    embedding = W_words[word]
+                    idf = idfs[word]
+                    caption_vec += embedding * idf #calculates vector
             
             magnitude = np.linalg.norm(caption_vec) #
             if magnitude > 0:
