@@ -8,11 +8,15 @@ class image_id:
         self.name = name #image_ID
         self.url= url
         self.caption_ID = []
+        self.caption_index = []
         self.descriptor= None
         self.W= None
 
     def add_caption_ID(self, caption_ID):
         self.caption_ID.append(caption_ID)
+
+    def add_caption_index(self, index):
+        self.caption_index.append(index)
     
 class caption:
     def __init__(self, name, img_id, string):
@@ -35,9 +39,12 @@ def create_class():
         index_map[image["id"]] = counter
         counter+=1
         
+    counter = 0
     for cap in coco_data["annotations"]:
         captions.append(caption(cap["id"], cap["image_id"], cap["caption"]))
         image_ids[index_map[cap["image_id"]]].add_caption_ID(cap["id"])
+        image_ids[index_map[cap["image_id"]]].add_caption_index(counter)
+        counter+=1
 
     with open('image_ids.pkl', 'wb') as f_img:
         pickle.dump(image_ids, f_img)
