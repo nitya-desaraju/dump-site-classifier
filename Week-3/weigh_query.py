@@ -9,7 +9,7 @@ import numpy as np
 punc_regex = re.compile('[{}]'.format(re.escape(string.punctuation)))
 
 
-def embed_caption(caption_file_path):
+def weigh_query(caption_file_path):
 
     #takes each caption from all captions and processes it
     def process_caption(caption_file_path):
