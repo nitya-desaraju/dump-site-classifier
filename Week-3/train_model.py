@@ -95,7 +95,7 @@ def train_model(train, test, margin, image_ids_updated_pkl, captions_pkl, batch_
     return model
 
 
-def generate_linear_encoder(image_ids_updated, image_ids_updated_pkl, captions_pkl, margin=0.5):
-    test, train = Test_train_ID(image_ids_updated)
+def generate_linear_encoder(image_ids_updated_pkl, captions_pkl, margin=0.5):
+    test, train = Test_train_ID(image_ids_updated_pkl)
     model = train_model(test=test, train=train, image_ids_updated_pkl=image_ids_updated_pkl, captions_pkl=captions_pkl, margin=0.5)
     return model
