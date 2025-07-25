@@ -41,13 +41,17 @@ def train_model(train, test, margin, image_ids_updated_pkl, captions_pkl, batch_
     
     #true_descriptors = mg.tensor([(image_ids[x].descriptor) for x in true_ids])
     #confusor_descriptors = mg.tensor([list(image_ids[x].descriptor) for x in confusor_ids])
+    #caption_embeddings = mg.tensor([list(caption[x].W_norm) for x in caption_ids])
     true_descriptors = mg.tensor([x.descriptor for x in true_ids])
     confusor_descriptors = mg.tensor([x.descriptor for x in confusor_ids])
-    caption_embeddings = mg.tensor([list(caption[x].W_norm) for x in caption_ids])
+    caption_embeddings = mg.tensor([x.W_norm for x in caption_ids])
     
-    true_descriptors_test = mg.tensor([list(image_ids[x].descriptor) for x in true_test])
-    confusor_descriptors_test = mg.tensor([list(image_ids[x].descriptor) for x in confusor_test])
-    caption_embeddings_test = mg.tensor([list(caption[x].W_norm) for x in caption_test])
+    #true_descriptors_test = mg.tensor([list(image_ids[x].descriptor) for x in true_test])
+    #confusor_descriptors_test = mg.tensor([list(image_ids[x].descriptor) for x in confusor_test])
+    #caption_embeddings_test = mg.tensor([list(caption[x].W_norm) for x in caption_test])
+    true_descriptors_test = mg.tensor([x.descriptor for x in true_test])
+    confusor_descriptors_test = mg.tensor([x.descriptor for x in confusor_test])
+    caption_embeddings_test = mg.tensor([x.W_norm for x in caption_test])
     
     N = true_descriptors.shape[0]
     
@@ -97,6 +101,6 @@ def train_model(train, test, margin, image_ids_updated_pkl, captions_pkl, batch_
 
 
 def generate_linear_encoder(image_ids_updated_pkl, captions_pkl, margin=0.5):
-    test, train = Test_train_ID(image_ids_updated_pkl)
+    test, train = Test_train_ID(image_ids_updated_pkl, captions_pkl)
     model = train_model(test=test, train=train, image_ids_updated_pkl=image_ids_updated_pkl, captions_pkl=captions_pkl, margin=0.5)
     return model
