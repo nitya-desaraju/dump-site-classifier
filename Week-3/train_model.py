@@ -23,14 +23,13 @@ class Model:
         return self.dense.parameters
 
 
-plotter, fig, ax = create_plot(metrics=["loss"])
-
 params = []
 train_accuracies = []
 test_accuracies = []
 
-
 def train_model(train, test, margin, image_ids_updated_pkl, captions_pkl, batch_size=32, num_epochs=250):
+    global train_accuracies
+    global test_accuracies
     
     caption_ids, true_ids, confusor_ids = train # true-caption-ID, true-image-ID, conufuser-image-ID
     caption_test, true_test, confusor_test = test
@@ -73,7 +72,7 @@ def train_model(train, test, margin, image_ids_updated_pkl, captions_pkl, batch_
             
             op.step()
 
-            plotter.set_train_batch({"loss" : loss.item()}, batch_size=batch_size)
+            #plotter.set_train_batch({"loss" : loss.item()}, batch_size=batch_size)
 
         if epoch_cnt % 25 == 0:
             params.append(model.parameters)
@@ -89,8 +88,8 @@ def train_model(train, test, margin, image_ids_updated_pkl, captions_pkl, batch_
                 loss = margin_ranking_loss(x1=sim_true, x2=sim_confused, margin=margin)
                 train_accuracies.append(loss.item())
 
-            print(f'epoch {epoch_cnt:5}, loss = {loss.item():0.3f}')
-            plotter.set_train_epoch()
+            #print(f'epoch {epoch_cnt:5}, loss = {loss.item():0.3f}')
+            #plotter.set_train_epoch()
     
     return model
 
