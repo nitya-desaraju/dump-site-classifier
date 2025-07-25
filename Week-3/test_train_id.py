@@ -34,7 +34,7 @@ def test_train_id(image_ids_updated_pkl: str, captions_pkl):
         #caption_id = k.caption_ID[random.randint(0, 4)]
         #confusor_id = test_items[random.randint(0, test_items.shape[0]-1)].name
         image_id = k
-        caption_id = k.caption_ID[random.randint(0, 4)]
+        caption_id = captions[k.caption_ID[random.randint(0, 4)]]
         confusor_id = train_items[random.randint(0, train_items.shape[0]-1)]
         test_data[0].append(caption_id)
         test_data[1].append(image_id)
