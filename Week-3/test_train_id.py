@@ -4,9 +4,9 @@ import numpy as np
 def test_train_id(image_ids_updated_pkl: str, captions_pkl):
     with open(image_ids_updated_pkl, 'rb') as f:
         loaded_data = pickle.load(f)
-    with open(image_ids_updated_pkl, 'rb') as g:
+    with open(captions_pkl, 'rb') as g:
         captions = pickle.load(g)
-
+    
     keys = np.array(loaded_data)
     random.shuffle(keys)
 
@@ -19,7 +19,7 @@ def test_train_id(image_ids_updated_pkl: str, captions_pkl):
         #caption_id = k.caption_ID[random.randint(0, 4)]
         #confusor_id = train_items[random.randint(0, train_items.shape[0]-1)].name
         image_id = k
-        caption_id = captions[k.caption_ID[random.randint(0, 4)]]
+        caption_id = captions[k.caption_index[random.randint(0, len(k.caption_index)-1)]]
         confusor_id = train_items[random.randint(0, train_items.shape[0]-1)]
         train_data[0].append(caption_id)
         train_data[1].append(image_id)
@@ -34,8 +34,8 @@ def test_train_id(image_ids_updated_pkl: str, captions_pkl):
         #caption_id = k.caption_ID[random.randint(0, 4)]
         #confusor_id = test_items[random.randint(0, test_items.shape[0]-1)].name
         image_id = k
-        caption_id = captions[k.caption_ID[random.randint(0, 4)]]
-        confusor_id = train_items[random.randint(0, train_items.shape[0]-1)]
+        caption_id = captions[k.caption_index[random.randint(0, len(k.caption_index)-1)]]
+        confusor_id = test_items[random.randint(0, test_items.shape[0]-1)]
         test_data[0].append(caption_id)
         test_data[1].append(image_id)
         test_data[2].append(confusor_id)
