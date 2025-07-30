@@ -5,7 +5,7 @@ def identify_dumps(image, size, k=1, dist=-1):
     image: a heatmap np.ndarray of shape (H,W)
     size: size of the bounding box
     '''
-    if dist=-1:
+    if dist==-1:
         dist = max(size[0]//2, size[1]//2)
     
     pfx_sums = np.zeros(np.array(image.shape)+np.array([1,1,1]))
