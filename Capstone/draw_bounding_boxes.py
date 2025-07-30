@@ -5,6 +5,11 @@ def draw_bounding_boxes(height, width, x, y, image, show_graph=False):
     y_max = int(y+height/2)
     print(x_min, x_max, y_min, y_max)
     cropped_image = image[y_min : y_max, x_min: x_max]
+    results = np.zeros((4, height, width, 3), dtype=int)
+
+    for i in range(4):
+        cropped_image = np.rot90(cropped_image)
+        results[i] = cropped_image
 
     if show_graph:
         x_line = np.linspace(x_min, x_max, 100)
@@ -22,4 +27,4 @@ def draw_bounding_boxes(height, width, x, y, image, show_graph=False):
 
         plt.show()
 
-    return cropped_image
+    return results
