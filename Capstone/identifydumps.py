@@ -16,8 +16,8 @@ def identify_dumps(image, size, k=1, dist=-1):
 
     sorted_points = []
     
-    for i in range(len(size[0]-1, image.shape[0])):
-        for j in range(len(size[1]-1, image.shape[1])):
+    for i in range(len(size[0]-1), image.shape[0]):
+        for j in range(len(size[1]-1), image.shape[1]):
             count = pfx_sums[i+1, j+1] - pfx_sums[i+1-size[0], j+1] - pfx_sums[i+1, j+1-size[1]] + pfx_sums[i+1-size[0], j+1-size[1]]
             sorted_points.append( (count , np.array([i-(size[0]-1)//2,j-(size[1]-1)//2]) ) )
     sorted_points.sort(key=lambda x:-x[0])
