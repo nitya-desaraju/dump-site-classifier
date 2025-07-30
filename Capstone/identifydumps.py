@@ -33,6 +33,8 @@ def identify_dumps(image, size, k=1, dist=-1):
                 break
         if add:
             points.append(p[1])
+        if len(points)>=k:
+            break
 
     return np.array(points)
     
