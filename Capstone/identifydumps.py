@@ -8,7 +8,7 @@ def identify_dumps(image, size, k=1, dist=-1):
     if dist==-1:
         dist = max(size[0]//2, size[1]//2)
     
-    pfx_sums = np.zeros(np.array(image.shape)+np.array([1,1,1]))
+    pfx_sums = np.zeros(np.array(image.shape)+np.array([1,1]))
     
     for i,x in enumerate(image):
         for j,y in enumerate(x):
