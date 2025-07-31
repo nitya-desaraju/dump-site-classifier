@@ -5,12 +5,18 @@ def draw_bounding_boxes(height, width, x, y, image, show_graph=False):
     y_max = int(y+height/2)
     print(x_min, x_max, y_min, y_max)
     cropped_image = image[y_min : y_max, x_min: x_max]
-    results = np.zeros((4, height, width, 3), dtype=int)
+    results = np.zeros((12, height, width, 3), dtype=int)
 
     for i in range(4):
         cropped_image = np.rot90(cropped_image)
         results[i] = cropped_image
-
+    for i in range(4):
+        x_reflected_image = np.flip(results[i],0)
+        results[i+4] = x_reflected_image
+    for i in range(4):
+        y_reflected_image = np.flip(results[i],1)
+        results[i+8] = y_reflected_image
+    
     if show_graph:
         x_line = np.linspace(x_min, x_max, 100)
         y_line = np.linspace(y_min, y_max, 100)
