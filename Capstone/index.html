@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pickle V - Waste Classification</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: rgba(5, 201, 240, 0.15); }
+        .pickle-green { color: #22c55d; }
+        .pickle-green-bg { background-color: #22c55d; }
+        .pickle-green-border { border-color: #22c55d; }
+        #drop-zone { border: 2px dashed #cbd5e1; transition: all 0.3s ease; }
+        #drop-zone.drag-over { border-color: #22c55d; background-color: #f7fafc; }
+        #image-upload-input { display: none; }
+        #main-title { font-weight: 900; }
+        .example-image { cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .example-image:hover { transform: scale(1.05); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+    </style>
+</head>
+<body class="text-slate-800">
+    <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-6xl">
+        <header class="text-center mb-8">
+            <h1 id="main-title" class="text-5xl sm:text-6xl md:text-7xl font-black text-slate-900 flex items-center justify-center">
+                ♻️ Pickle V <img src="images/pickleball.png" alt="Pickle Icon" class="ml-4 h-12 sm:h-16" onerror="this.style.display='none'">
+            </h1>
+            <p class="mt-2 text-lg sm:text-xl text-slate-600">Keeping our pickleball courts and planet clean!</p>
+        </header>
+        <div class="text-center max-w-3xl mx-auto mb-10">
+            <p class="text-slate-700"><strong>Welcome to Pickle V!</strong> This tool uses two machine learning models to identify where waste is and what kind it is. This can help city management find the best route to remove it and keep the city clean!</p>
+        </div>
+        <main class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+            <div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-lg border-2 border-slate-200">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4">Input</h2>
+                <div id="input-image-box">
+                    <h3 class="font-semibold text-slate-600 mb-2">Upload Satellite Image</h3>
+                    <label for="image-upload-input" id="drop-zone" class="relative flex flex-col items-center justify-center w-full min-h-80 bg-slate-50 rounded-xl cursor-pointer p-2">
+                        <div id="upload-prompt" class="flex flex-col items-center justify-center text-center">
+                            <svg class="w-8 h-8 mb-4 text-slate-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/></svg>
+                            <p class="mb-2 text-sm text-slate-500"><span class="font-semibold">Click to upload</span> or drag and drop</p>
+                        </div>
+                        <img id="input-image-preview" src="" alt="Image Preview" class="hidden rounded-xl max-w-full max-h-96 object-contain"/>
+                        <button type="button" id="clear-input-btn" class="hidden absolute top-4 right-4 bg-white/70 backdrop-blur-sm rounded-full h-8 w-8 flex items-center justify-center text-slate-700 hover:bg-white transition-all text-2xl font-bold">&times;</button>
+                        <input id="image-upload-input" type="file" accept="image/*" />
+                    </label>
+                </div>
+                <button id="predict-button" class="mt-4 w-full pickle-green-bg text-white font-bold py-3 px-4 rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-75 transition-all disabled:bg-slate-400 disabled:cursor-not-allowed">Predict</button>
+            </div>
+            <div class="lg:col-span-3 bg-white p-6 rounded-2xl shadow-lg border-2 border-slate-200 lg:border-l-4">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4">Results</h2>
+                <div class="space-y-6">
+                    <div>
+                        <h3 class="font-semibold text-slate-600 mb-2">Waste Classification</h3>
+                        <div id="class-output-box" class="h-32 bg-slate-100 rounded-xl flex items-center justify-center text-center p-4 border-2 pickle-green-border">
+                            <p id="class-output-text" class="text-slate-500">Upload an image and click "Predict"</p>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-slate-600 mb-2">Dump Site Heatmap</h3>
+                        <div class="bg-slate-100 rounded-xl border-2 pickle-green-border w-full min-h-80 p-2 flex items-center justify-center">
+                             <img id="heatmap-output" class="rounded-xl max-w-full max-h-96 object-contain" src="" alt=""/>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-6 flex justify-end">
+                    <button id="clear-all-btn" title="Clear Results" class="bg-slate-200 text-slate-600 font-bold py-2 px-5 rounded-lg hover:bg-slate-300 transition-colors">Clear</button>
+                </div>
+            </div>
+        </main>
+        <section class="mt-12">
+            <h2 class="text-center text-2xl font-bold text-slate-800 mb-2">Don't have an image?</h2>
+            <p class="text-center text-slate-600 mb-6">Click on an example to try it out!</p>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                <img src="images/dump_site_1.png" alt="Example 1" class="example-image w-full rounded-xl shadow-md border-4 border-transparent hover:border-green-400">
+                <img src="images/dump_site_2.png" alt="Example 2" class="example-image w-full rounded-xl shadow-md border-4 border-transparent hover:border-green-400">
+                <img src="images/dump_site_3.png" alt="Example 3" class="example-image w-full rounded-xl shadow-md border-4 border-transparent hover:border-green-400">
+            </div>
+        </section>
+        <footer class="text-center mt-12 pt-8 border-t border-slate-300">
+            <p class="text-slate-500 italic">Brought to you by the <strong class="pickle-green">Pickleball Lovers</strong></p>
+        </footer>
+    </div>
+
+    <script>
+        const imageUploadInput = document.getElementById('image-upload-input');
+        const inputImagePreview = document.getElementById('input-image-preview');
+        const predictButton = document.getElementById('predict-button');
+        const classOutputBox = document.getElementById('class-output-box');
+        const heatmapOutput = document.getElementById('heatmap-output');
+        const dropZone = document.getElementById('drop-zone');
+        const uploadPrompt = document.getElementById('upload-prompt');
+        const exampleImages = document.querySelectorAll('.example-image');
+        const clearInputBtn = document.getElementById('clear-input-btn');
+        const clearAllBtn = document.getElementById('clear-all-btn');
+        
+        const CLASS_NAMES = ["Rubble/excavated earth and rocks", "Bulky items", "Testing Indexing"];
+        let currentFile = null;
+
+    
+        function showModal(message, isError = false) {
+            const modal = document.createElement('div');
+            const buttonColor = isError ? '#ef4444' : '#22c55d'; // red for error, green for info
+            modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000;';
+            modal.innerHTML = `
+                <div style="background: white; padding: 2rem; border-radius: 0.75rem; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+                    <p style="margin-bottom: 1.5rem; font-size: 1.125rem; max-width: 300px;">${message}</p>
+                    <button 
+                        onclick="this.parentElement.parentElement.remove()" 
+                        style="padding: 0.5rem 1.5rem; background: ${buttonColor}; color: white; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: bold;">
+                        OK
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+    
+        async function displayResults(fileToProcess) {
+            if (!fileToProcess) {
+                showModal('Please select an image first.');
+                return;
+            }
+
+            predictButton.disabled = true;
+            predictButton.textContent = 'Processing...';
+            classOutputBox.innerHTML = `<p class="text-slate-500">Analyzing image...</p>`;
+            heatmapOutput.src = ""; // Clear previous heatmap
+
+            const formData = new FormData();
+            formData.append('file', fileToProcess);
+
+            try {
+                // Send the image to the Python Flask server
+                const response = await fetch('http://127.0.0.1:5000/predict', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`Server error: ${errorData.error || response.statusText}`);
+                }
+
+                const data = await response.json();
+
+                // Update UI with the results from the server
+                heatmapOutput.src = data.heatmap;
+
+                const predIdx = data.classIdx;
+                const className = CLASS_NAMES[predIdx];
+                const confidence = data.confidences[0][predIdx];
+                const confidencePercentage = `${(confidence * 100).toFixed(0)}%`;
+
+                classOutputBox.innerHTML = `
+                    <div class='text-center'>
+                        <p class='text-xl sm:text-2xl font-bold text-slate-900'>${className}</p>
+                        <p class='text-sm sm:text-base text-slate-500 mt-1'>Confidence Score: ${confidencePercentage}</p>
+                    </div>
+                `;
+
+            } catch (error) {
+                console.error('Error:', error);
+                classOutputBox.innerHTML = `<p class="text-red-500">Error processing image. Is the server running?</p>`;
+                showModal('Could not connect to the model server. Please ensure it is running and try again.', true);
+            } finally {
+                predictButton.disabled = false;
+                predictButton.textContent = 'Predict';
+            }
+        }
+
+        function clearInput() {
+            currentFile = null;
+            imageUploadInput.value = null; // Reset file input
+            inputImagePreview.src = '';
+            inputImagePreview.classList.add('hidden');
+            uploadPrompt.classList.remove('hidden');
+            clearInputBtn.classList.add('hidden');
+        }
+
+        function clearAll() {
+            clearInput();
+            classOutputBox.innerHTML = `<p id="class-output-text" class="text-slate-500">Upload an image and click "Predict"</p>`;
+            heatmapOutput.src = '';
+            heatmapOutput.alt = '';
+        }
+
+        function handleFileSelect(file) {
+            if (file) {
+                currentFile = file;
+                inputImagePreview.src = URL.createObjectURL(file);
+                inputImagePreview.classList.remove('hidden');
+                uploadPrompt.classList.add('hidden');
+                clearInputBtn.classList.remove('hidden');
+            }
+        }
+
+        // --- Event Listeners ---
+
+        // Listener for the file input element
+        imageUploadInput.addEventListener('change', (event) => handleFileSelect(event.target.files[0]));
+        
+        // Listener for the predict button
+        predictButton.addEventListener('click', () => displayResults(currentFile));
+        
+        // Listeners for drag and drop functionality
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => dropZone.addEventListener(eventName, (e) => { e.preventDefault(); e.stopPropagation(); }));
+        ['dragenter', 'dragover'].forEach(eventName => dropZone.addEventListener(eventName, () => dropZone.classList.add('drag-over')));
+        ['dragleave', 'drop'].forEach(eventName => dropZone.addEventListener(eventName, () => dropZone.classList.remove('drag-over')));
+        dropZone.addEventListener('drop', (e) => handleFileSelect(e.dataTransfer.files[0]));
+        
+        // Listener for the input clear button
+        clearInputBtn.addEventListener('click', (e) => {
+            e.preventDefault(); // Prevent label from triggering file input
+            clearInput();
+        });
+
+        // Listener for the clear all button
+        clearAllBtn.addEventListener('click', clearAll);
+
+        // Listeners for the example images
+        exampleImages.forEach(img => {
+            img.addEventListener('click', async () => {
+                try {
+                    const response = await fetch(img.src);
+                    const blob = await response.blob();
+                    const file = new File([blob], img.src.split('/').pop(), { type: blob.type });
+                    // This now ONLY loads the image into the preview box.
+                    handleFileSelect(file);
+                } catch (error) {
+                    console.error("Error loading example image:", error);
+                    showModal("Could not load the example image.", true);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
